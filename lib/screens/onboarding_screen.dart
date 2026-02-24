@@ -78,7 +78,7 @@ class _OnboardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
+      padding: const EdgeInsets.symmetric(horizontal: 40),
       child: Column(
         children: [
           const Spacer(flex: 3),
@@ -95,7 +95,7 @@ class _OnboardingPage extends StatelessWidget {
           ),
           const Spacer(flex: 4),
           _PrimaryButton(label: ctaLabel, onTap: onCta),
-          const SizedBox(height: 48),
+          const SizedBox(height: 44),
         ],
       ),
     );
@@ -110,22 +110,20 @@ class _PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 18),
-          decoration: BoxDecoration(
-            color: AppColors.buttonBackground,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.divider, width: 1),
-          ),
-          child: Text(
-            label,
-            style: AppTextStyles.buttonPrimary,
-            textAlign: TextAlign.center,
-          ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 80,
+        height: 80,
+        decoration: const BoxDecoration(
+          color: AppColors.buttonBackground,
+          shape: BoxShape.circle,
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          label,
+          style: AppTextStyles.buttonPrimary,
+          textAlign: TextAlign.center,
         ),
       ),
     );
