@@ -51,11 +51,16 @@ class _BreathingTimerState extends State<BreathingTimer>
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.active) return widget.child;
+    // Always use the same tree shape so the child's element (and all
+    // ReelDigit states inside it) survive the active→inactive phase switch.
+    // Changing the structure here would destroy those states before
+    // didUpdateWidget can fire, causing the digits to snap instead of animate.
     return AnimatedBuilder(
       animation: _scaleAnimation,
-      builder: (context, child) =>
-          Transform.scale(scale: _scaleAnimation.value, child: child),
+      builder: (context, child) {
+        final scale = widget.active ? _scaleAnimation.value : 1.0;
+        return Transform.scale(scale: scale, child: child);
+      },
       child: widget.child,
     );
   }

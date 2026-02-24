@@ -9,22 +9,13 @@ class AppRoute<T> extends PageRouteBuilder<T> {
           transitionDuration: const Duration(milliseconds: 480),
           reverseTransitionDuration: const Duration(milliseconds: 360),
           transitionsBuilder: (_, animation, __, child) {
-            final fade = CurvedAnimation(
-              parent: animation,
-              curve: Curves.easeOut,
-              reverseCurve: Curves.easeIn,
-            );
-            final slide = Tween<Offset>(
-              begin: const Offset(0, 0.03),
-              end: Offset.zero,
-            ).animate(CurvedAnimation(
-              parent: animation,
-              curve: Curves.easeOut,
-              reverseCurve: Curves.easeIn,
-            ));
             return FadeTransition(
-              opacity: fade,
-              child: SlideTransition(position: slide, child: child),
+              opacity: CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOut,
+                reverseCurve: Curves.easeIn,
+              ),
+              child: child,
             );
           },
         );

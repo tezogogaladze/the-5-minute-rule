@@ -18,16 +18,11 @@ class TimerScreen extends StatefulWidget {
 
 class _TimerScreenState extends State<TimerScreen> {
   late TimerController _controller;
-  bool _showTransition = false;
-  // Initialised in initState from current phase so background-restores
-  // mid-countup don't incorrectly trigger the transition animation.
-  bool _wasCountup = false;
 
   @override
   void initState() {
     super.initState();
     _controller = context.read<TimerController>();
-    _wasCountup = _controller.phase == TimerPhase.countup;
     _controller.addListener(_onPhaseChange);
   }
 
@@ -39,19 +34,7 @@ class _TimerScreenState extends State<TimerScreen> {
 
   void _onPhaseChange() {
     if (!mounted) return;
-    final phase = _controller.phase;
-
-    // Detect the exact moment countdown → countup.
-    if (phase == TimerPhase.countup && !_wasCountup) {
-      _wasCountup = true;
-      setState(() => _showTransition = true);
-      // Clear the flag after the flip animation completes (340 ms + buffer).
-      Future.delayed(const Duration(milliseconds: 420), () {
-        if (mounted) setState(() => _showTransition = false);
-      });
-    }
-
-    if (phase == TimerPhase.complete) {
+    if (_controller.phase == TimerPhase.complete) {
       Navigator.of(context).pushReplacement(
         AppRoute(page: const CompletionScreen()),
       );
@@ -85,8 +68,7 @@ class _TimerScreenState extends State<TimerScreen> {
                   child: FlipTimerDisplay(
                     timeString: controller.displayTime,
                     style: AppTextStyles.timerHuge,
-                    colonAnimate: isCountdown,
-                    isTransition: _showTransition,
+                    scrollDown: isCountup,
                   ),
                 ),
               ),
@@ -94,8 +76,8 @@ class _TimerScreenState extends State<TimerScreen> {
               // ── Bottom control zone ────────────────────────────────────────
               Positioned(
                 bottom: 0,
-                left: 40,
-                right: 40,
+                left: 0,
+                right: 0,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -161,26 +143,20 @@ class _StopButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 18),
-          decoration: BoxDecoration(
-            color: AppColors.stopButton,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: AppColors.stopButtonText.withValues(alpha: 0.25),
-              width: 1,
-            ),
-          ),
-          child: Text(
-            AppStrings.stopButton,
-            style: AppTextStyles.buttonPrimary.copyWith(
-              color: AppColors.stopButtonText,
-            ),
-            textAlign: TextAlign.center,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 80,
+        height: 80,
+        decoration: const BoxDecoration(
+          color: AppColors.stopButton,
+          shape: BoxShape.circle,
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          AppStrings.stopButton,
+          style: AppTextStyles.buttonPrimary.copyWith(
+            color: AppColors.stopButtonText,
           ),
         ),
       ),

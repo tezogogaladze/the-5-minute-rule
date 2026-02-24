@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../constants/colors.dart';
 import '../constants/strings.dart';
 import '../constants/text_styles.dart';
+import '../widgets/flip_timer.dart';
 import '../routes.dart';
 import '../services/timer_controller.dart';
 import 'timer_screen.dart';
@@ -72,8 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
             // ── Timer — true geometric center, never moves ───────────────────
             const Align(
               alignment: Alignment.center,
-              child: Text(
-                AppStrings.idleTime,
+              child: FlipTimerDisplay(
+                timeString: AppStrings.idleTime,
                 style: AppTextStyles.timerHuge,
               ),
             ),
@@ -81,22 +82,22 @@ class _HomeScreenState extends State<HomeScreen> {
             // ── Bottom control zone — fixed, doesn't shift the timer ─────────
             Positioned(
               bottom: 0,
-              left: 40,
-              right: 40,
+              left: 0,
+              right: 0,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  const Text(
+                    AppStrings.homeSubtext,
+                    style: AppTextStyles.microcopy,
+                  ),
+                  const SizedBox(height: 16),
                   _StartButton(
                     onTap: () {
                       context.read<TimerController>().startCountdown();
                       Navigator.of(context)
                           .push(AppRoute(page: const TimerScreen()));
                     },
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    AppStrings.homeSubtext,
-                    style: AppTextStyles.microcopy,
                   ),
                   const SizedBox(height: 44),
                 ],
@@ -116,22 +117,19 @@ class _StartButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 18),
-          decoration: BoxDecoration(
-            color: AppColors.buttonBackground,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.divider, width: 1),
-          ),
-          child: const Text(
-            AppStrings.startButton,
-            style: AppTextStyles.buttonPrimary,
-            textAlign: TextAlign.center,
-          ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 80,
+        height: 80,
+        decoration: const BoxDecoration(
+          color: AppColors.buttonBackground,
+          shape: BoxShape.circle,
+        ),
+        alignment: Alignment.center,
+        child: const Text(
+          AppStrings.startButton,
+          style: AppTextStyles.buttonPrimary,
         ),
       ),
     );

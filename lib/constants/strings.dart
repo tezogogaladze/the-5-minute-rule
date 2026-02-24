@@ -16,7 +16,7 @@ class AppStrings {
   static const String onboarding2Cta = 'Press when ready';
 
   // Home
-  static const String idleTime = '5:00';
+  static const String idleTime = '05:00';
   static const String startButton = 'Start';
   static const String homeSubtext = 'Press when ready.';
 
