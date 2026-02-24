@@ -1,0 +1,62 @@
+import 'package:flutter/material.dart';
+
+/// Wraps a child in a very subtle scale breathing animation.
+/// Scale oscillates between 1.0 and 1.02 over 4.5 seconds.
+class BreathingTimer extends StatefulWidget {
+  final Widget child;
+  final bool active;
+
+  const BreathingTimer({super.key, required this.child, this.active = true});
+
+  @override
+  State<BreathingTimer> createState() => _BreathingTimerState();
+}
+
+class _BreathingTimerState extends State<BreathingTimer>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 4500),
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.02).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+    if (widget.active) {
+      _controller.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void didUpdateWidget(BreathingTimer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.active && !oldWidget.active) {
+      _controller.repeat(reverse: true);
+    } else if (!widget.active && oldWidget.active) {
+      _controller.stop();
+      _controller.value = 0;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!widget.active) return widget.child;
+    return AnimatedBuilder(
+      animation: _scaleAnimation,
+      builder: (context, child) =>
+          Transform.scale(scale: _scaleAnimation.value, child: child),
+      child: widget.child,
+    );
+  }
+}
