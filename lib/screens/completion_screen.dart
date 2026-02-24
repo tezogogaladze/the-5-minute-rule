@@ -78,129 +78,135 @@ class _CompletionScreenState extends State<CompletionScreen>
 
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
+    const double doneButtonHeight = 80;
+    const double bottomPadding = 44;
+    const double fixedStripHeight = doneButtonHeight + bottomPadding;
+
     return PopScope(
       canPop: false,
-      child: Scaffold(
-        backgroundColor: AppColors.background,
-        // Keyboard must never shift the clock.
-        resizeToAvoidBottomInset: false,
-        body: FadeTransition(
-          opacity: _fadeIn,
-          child: SafeArea(
-            child: Stack(
-              children: [
-                // ── Clock + label — clock at true geometric center ────────────
-                // The column contains the clock + subtext below it.
-                // Align.center would place the column's midpoint at screen center,
-                // pushing the clock above center by (gap + subtext height) / 2.
-                // Shifting the column down by that same amount re-centers the clock.
-                // subheading: 16px × 1.6 line height = 25.6px; gap = 16px → offset ≈ 21px.
-                Align(
-                  alignment: Alignment.center,
-                  child: Transform.translate(
-                    offset: const Offset(0, 21),
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        behavior: HitTestBehavior.opaque,
+        child: Scaffold(
+          backgroundColor: AppColors.background,
+          // Keyboard must never shift the clock or the Done button.
+          resizeToAvoidBottomInset: false,
+          body: FadeTransition(
+            opacity: _fadeIn,
+            child: SafeArea(
+              child: Stack(
+                children: [
+                  // ── Clock + label — clock at true geometric center ────────────
+                  Align(
+                    alignment: Alignment.center,
+                    child: Transform.translate(
+                      offset: const Offset(0, 21),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          FlipTimerDisplay(
+                            timeString: totalTime,
+                            style: AppTextStyles.timerHuge,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            AppStrings.youBegan,
+                            style: AppTextStyles.subheading,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // ── Task name input — rises with keyboard, stays above Done ──
+                  Positioned(
+                    bottom: fixedStripHeight + keyboardHeight,
+                    left: 40,
+                    right: 40,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        FlipTimerDisplay(
-                          timeString: totalTime,
-                          style: AppTextStyles.timerHuge,
+                        Text(
+                          AppStrings.whatWasThis.toUpperCase(),
+                          style: AppTextStyles.label,
                         ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          AppStrings.youBegan,
-                          style: AppTextStyles.subheading,
-                          textAlign: TextAlign.center,
+                        const SizedBox(height: 10),
+                        TextField(
+                          controller: _taskController,
+                          style: AppTextStyles.body.copyWith(
+                            color: AppColors.primaryText,
+                            fontSize: 15,
+                          ),
+                          cursorColor: AppColors.accent,
+                          maxLength: 80,
+                          decoration: InputDecoration(
+                            hintText: AppStrings.taskHint,
+                            hintStyle: AppTextStyles.body,
+                            counterText: '',
+                            filled: true,
+                            fillColor: AppColors.surface,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(
+                                color: AppColors.divider,
+                                width: 1,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(
+                                color: AppColors.accent,
+                                width: 1,
+                              ),
+                            ),
+                          ),
+                          onSubmitted: (_) => _done(context),
                         ),
                       ],
                     ),
                   ),
-                ),
 
-                // ── Bottom zone — rises with keyboard via viewInsets ──────────
-                Positioned(
-                  bottom: keyboardHeight,
-                  left: 40,
-                  right: 40,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Task name input
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppStrings.whatWasThis.toUpperCase(),
-                            style: AppTextStyles.label,
-                          ),
-                          const SizedBox(height: 10),
-                          TextField(
-                            controller: _taskController,
-                            style: AppTextStyles.body.copyWith(
-                              color: AppColors.primaryText,
-                              fontSize: 15,
+                  // ── Done button — fixed at bottom, never moves ───────────────
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(height: 24),
+                        GestureDetector(
+                          onTap: () => _done(context),
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            decoration: const BoxDecoration(
+                              color: AppColors.buttonBackground,
+                              shape: BoxShape.circle,
                             ),
-                            cursorColor: AppColors.accent,
-                            maxLength: 80,
-                            decoration: InputDecoration(
-                              hintText: AppStrings.taskHint,
-                              hintStyle: AppTextStyles.body,
-                              counterText: '',
-                              filled: true,
-                              fillColor: AppColors.surface,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 14,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                  color: AppColors.divider,
-                                  width: 1,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                  color: AppColors.accent,
-                                  width: 1,
-                                ),
-                              ),
+                            alignment: Alignment.center,
+                            child: const Text(
+                              AppStrings.doneButton,
+                              style: AppTextStyles.buttonPrimary,
                             ),
-                            onSubmitted: (_) => _done(context),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // Done button
-                      GestureDetector(
-                        onTap: () => _done(context),
-                        child: Container(
-                          width: 80,
-                          height: 80,
-                          decoration: const BoxDecoration(
-                            color: AppColors.buttonBackground,
-                            shape: BoxShape.circle,
-                          ),
-                          alignment: Alignment.center,
-                          child: const Text(
-                            AppStrings.doneButton,
-                            style: AppTextStyles.buttonPrimary,
                           ),
                         ),
-                      ),
-
-                      const SizedBox(height: 44),
-                    ],
+                        const SizedBox(height: 44),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
