@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="the_five_minute_rule"
+        android:label="The 5-Minute Rule"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
