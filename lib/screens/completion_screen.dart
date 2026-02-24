@@ -83,7 +83,7 @@ class _CompletionScreenState extends State<CompletionScreen>
           opacity: _fadeIn,
           child: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
+              padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(
                 children: [
                   const Spacer(flex: 2),
@@ -182,7 +182,7 @@ class _CompletionScreenState extends State<CompletionScreen>
                     ),
                   ),
 
-                  const Spacer(),
+                  const SizedBox(height: 44),
                 ],
               ),
             ),

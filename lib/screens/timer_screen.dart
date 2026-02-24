@@ -18,11 +18,16 @@ class TimerScreen extends StatefulWidget {
 
 class _TimerScreenState extends State<TimerScreen> {
   late TimerController _controller;
+  bool _showTransition = false;
+  // Initialised in initState from current phase so background-restores
+  // mid-countup don't incorrectly trigger the transition animation.
+  bool _wasCountup = false;
 
   @override
   void initState() {
     super.initState();
     _controller = context.read<TimerController>();
+    _wasCountup = _controller.phase == TimerPhase.countup;
     _controller.addListener(_onPhaseChange);
   }
 
@@ -34,7 +39,19 @@ class _TimerScreenState extends State<TimerScreen> {
 
   void _onPhaseChange() {
     if (!mounted) return;
-    if (_controller.phase == TimerPhase.complete) {
+    final phase = _controller.phase;
+
+    // Detect the exact moment countdown → countup.
+    if (phase == TimerPhase.countup && !_wasCountup) {
+      _wasCountup = true;
+      setState(() => _showTransition = true);
+      // Clear the flag after the flip animation completes (340 ms + buffer).
+      Future.delayed(const Duration(milliseconds: 420), () {
+        if (mounted) setState(() => _showTransition = false);
+      });
+    }
+
+    if (phase == TimerPhase.complete) {
       Navigator.of(context).pushReplacement(
         AppRoute(page: const CompletionScreen()),
       );
@@ -69,6 +86,7 @@ class _TimerScreenState extends State<TimerScreen> {
                     timeString: controller.displayTime,
                     style: AppTextStyles.timerHuge,
                     colonAnimate: isCountdown,
+                    isTransition: _showTransition,
                   ),
                 ),
               ),
