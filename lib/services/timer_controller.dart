@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'storage_service.dart';
 
 enum TimerPhase { idle, countdown, countup, complete }
@@ -84,6 +85,7 @@ class TimerController extends ChangeNotifier with WidgetsBindingObserver {
     _lastDisplayedSeconds = kCountdownSeconds;
     _persistState();
     _startTicker();
+    WakelockPlus.enable();
     notifyListeners();
   }
 
@@ -93,6 +95,7 @@ class TimerController extends ChangeNotifier with WidgetsBindingObserver {
     _phase = TimerPhase.complete;
     _stopTicker();
     _persistState();
+    WakelockPlus.disable();
     notifyListeners();
   }
 
@@ -104,6 +107,7 @@ class TimerController extends ChangeNotifier with WidgetsBindingObserver {
     _lastDisplayedSeconds = kCountdownSeconds;
     _stopTicker();
     _storage.clearTimerState();
+    WakelockPlus.disable();
     notifyListeners();
   }
 
