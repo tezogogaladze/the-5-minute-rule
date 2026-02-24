@@ -13,7 +13,7 @@ class AppStrings {
   static const String onboarding2Title = 'After five minutes';
   static const String onboarding2Body =
       'The timer turns upward. Stop anytime. Name it later.';
-  static const String onboarding2Cta = 'Press when ready';
+  static const String onboarding2Cta = 'Ready';
 
   // Home
   static const String idleTime = '05:00';

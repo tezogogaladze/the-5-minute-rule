@@ -80,6 +80,9 @@ class _OnboardingPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: Column(
+        // Stretch forces the Column to fill the available width even when
+        // AnimatedSwitcher passes loose constraints via its internal Stack.
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const Spacer(flex: 3),
           Text(
@@ -94,7 +97,8 @@ class _OnboardingPage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const Spacer(flex: 4),
-          _PrimaryButton(label: ctaLabel, onTap: onCta),
+          // Center keeps the circular button at mid-width despite stretch.
+          Center(child: _PrimaryButton(label: ctaLabel, onTap: onCta)),
           const SizedBox(height: 44),
         ],
       ),
