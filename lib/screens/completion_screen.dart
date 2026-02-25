@@ -78,9 +78,11 @@ class _CompletionScreenState extends State<CompletionScreen>
 
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
+    const double gapAboveButton = 24;
     const double doneButtonHeight = 80;
     const double bottomPadding = 44;
-    const double fixedStripHeight = doneButtonHeight + bottomPadding;
+    const double fixedStripHeight =
+        gapAboveButton + doneButtonHeight + bottomPadding;
 
     return PopScope(
       canPop: false,
