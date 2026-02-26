@@ -44,9 +44,11 @@ class TimerController extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   /// Seconds elapsed in countup (0..). Displayed as 300 + elapsed.
+  /// Clamped to >= 0 so clock set backward never shows negative.
   int get countupElapsed {
     if (_countdownEndedAt == null) return 0;
-    return DateTime.now().difference(_countdownEndedAt!).inSeconds;
+    final secs = DateTime.now().difference(_countdownEndedAt!).inSeconds;
+    return secs < 0 ? 0 : secs;
   }
 
   /// Total display seconds for the current state (used by both phases).
@@ -62,10 +64,12 @@ class TimerController extends ChangeNotifier with WidgetsBindingObserver {
   int get lastDisplayedSeconds => _lastDisplayedSeconds;
 
   /// Total session duration in seconds (from Start to Stop press).
+  /// Clamped to >= 0 for clock-change robustness.
   int get totalDurationSeconds {
     if (_sessionStartedAt == null) return 0;
     final end = _stoppedAt ?? DateTime.now();
-    return end.difference(_sessionStartedAt!).inSeconds;
+    final secs = end.difference(_sessionStartedAt!).inSeconds;
+    return secs < 0 ? 0 : secs;
   }
 
   static String formatSeconds(int totalSeconds) {
