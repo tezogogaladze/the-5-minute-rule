@@ -29,16 +29,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 400),
+          duration: const Duration(milliseconds: 480),
           transitionBuilder: (child, animation) => FadeTransition(
-            opacity: animation,
-            child: SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0.04, 0),
-                end: Offset.zero,
-              ).animate(animation),
-              child: child,
+            opacity: CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOut,
+              reverseCurve: Curves.easeIn,
             ),
+            child: child,
           ),
           child: _page == 0
               ? _OnboardingPage(
@@ -84,7 +82,7 @@ class _OnboardingPage extends StatelessWidget {
         // AnimatedSwitcher passes loose constraints via its internal Stack.
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Spacer(flex: 3),
+          const Spacer(flex: 1),
           Text(
             title,
             style: AppTextStyles.heading,
@@ -96,7 +94,7 @@ class _OnboardingPage extends StatelessWidget {
             style: AppTextStyles.subheading,
             textAlign: TextAlign.center,
           ),
-          const Spacer(flex: 4),
+          const Spacer(flex: 1),
           // Center keeps the circular button at mid-width despite stretch.
           Center(child: _PrimaryButton(label: ctaLabel, onTap: onCta)),
           const SizedBox(height: 44),

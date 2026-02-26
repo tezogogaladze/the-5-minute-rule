@@ -98,32 +98,40 @@ class _CompletionScreenState extends State<CompletionScreen>
             child: SafeArea(
               child: Stack(
                 children: [
-                  // ── Clock + label — clock at true geometric center ────────────
-                  Align(
-                    alignment: Alignment.center,
-                    child: Transform.translate(
-                      offset: const Offset(0, 21),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          FlipTimerDisplay(
-                            timeString: totalTime,
-                            style: AppTextStyles.timerHuge,
-                          ),
-                          const SizedBox(height: 16),
-                          const Text(
-                            AppStrings.youBegan,
-                            style: AppTextStyles.subheading,
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
+                  // ── Clock + label — clock aligned with Home/Timer (band center) ─
+                  Positioned(
+                    top: 56,
+                    bottom: 164,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: Transform.translate(
+                        // Shift column down so the clock (not column center) is at band center
+                        offset: const Offset(0, 21),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            FlipTimerDisplay(
+                              timeString: totalTime,
+                              style: AppTextStyles.timerHuge,
+                            ),
+                            const SizedBox(height: 16),
+                            const Text(
+                              AppStrings.youBegan,
+                              style: AppTextStyles.subheading,
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
 
-                  // ── Task name input — rises with keyboard, stays above Done ──
+                  // ── Task name input — above Done when closed, just above keyboard when open ──
                   Positioned(
-                    bottom: fixedStripHeight + keyboardHeight,
+                    bottom: fixedStripHeight > keyboardHeight + 16
+                        ? fixedStripHeight
+                        : keyboardHeight + 16,
                     left: 40,
                     right: 40,
                     child: Column(

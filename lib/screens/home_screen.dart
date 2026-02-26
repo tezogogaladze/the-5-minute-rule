@@ -70,12 +70,17 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // ── Timer — true geometric center, never moves ───────────────────
-            const Align(
-              alignment: Alignment.center,
-              child: FlipTimerDisplay(
-                timeString: AppStrings.idleTime,
-                style: AppTextStyles.timerHuge,
+            // ── Timer — same band as Timer/Completion (top 56, bottom 164) ───
+            Positioned(
+              top: 56,
+              bottom: 164, // matches TimerScreen bottom strip for consistent clock
+              left: 0,
+              right: 0,
+              child: const Center(
+                child: FlipTimerDisplay(
+                  timeString: AppStrings.idleTime,
+                  style: AppTextStyles.timerHuge,
+                ),
               ),
             ),
 

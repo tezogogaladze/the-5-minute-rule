@@ -85,15 +85,23 @@ class _RootRouter extends StatelessWidget {
     final onboardingDone = storage.hasCompletedOnboarding;
 
     if (!onboardingDone) {
-      return OnboardingScreen(
-        onComplete: () async {
-          await storage.markOnboardingComplete();
-          // Rebuild so Navigator shows HomeScreen
-          if (context.mounted) {
-            Navigator.of(context).pushReplacement(
-              AppRoute(page: const HomeScreen()),
-            );
-          }
+      return Navigator(
+        initialRoute: '/',
+        onGenerateInitialRoutes: (_, __) {
+          return [
+            AppRoute(
+              page: OnboardingScreen(
+                onComplete: () async {
+                  await storage.markOnboardingComplete();
+                  if (context.mounted) {
+                    Navigator.of(context).pushReplacement(
+                      AppRoute(page: const HomeScreen()),
+                    );
+                  }
+                },
+              ),
+            ),
+          ];
         },
       );
     }

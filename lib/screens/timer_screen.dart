@@ -60,15 +60,20 @@ class _TimerScreenState extends State<TimerScreen> {
         body: SafeArea(
           child: Stack(
             children: [
-              // ── Timer — true geometric center, never moves ─────────────────
-              Align(
-                alignment: Alignment.center,
-                child: BreathingTimer(
-                  active: isCountdown,
-                  child: FlipTimerDisplay(
-                    timeString: controller.displayTime,
-                    style: AppTextStyles.timerHuge,
-                    scrollDown: isCountup,
+              // ── Timer — same band as Home/Completion (top 56, bottom 164) ───
+              Positioned(
+                top: 56, // reserve header height so clock doesn't shift from Home
+                bottom: 164, // microcopy 20 + 20 + 80 + 44
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: BreathingTimer(
+                    active: isCountdown,
+                    child: FlipTimerDisplay(
+                      timeString: controller.displayTime,
+                      style: AppTextStyles.timerHuge,
+                      scrollDown: isCountup,
+                    ),
                   ),
                 ),
               ),
