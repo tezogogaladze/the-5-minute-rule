@@ -1,16 +1,61 @@
-# the_five_minute_rule
+# the-5-minute-rule
 
-A new Flutter project.
+A minimal app designed to reduce friction and help users take action immediately.
+
+---
+
+## Overview
+
+**the-5-minute-rule** is built around a simple idea:
+
+> If something takes less than five minutes, do it now.
+
+The app removes complexity and focuses on a single interaction—prompting users to act instead of delay.
+
+---
+
+## Features
+
+- Single-purpose interaction model
+- Minimal, distraction-free UI
+- Immediate action prompts
+- Lightweight and fast
+
+---
+
+## Purpose
+
+The goal is not to manage tasks, but to eliminate hesitation.
+
+Instead of building a full productivity system, the app focuses on one behavior:
+- reducing overthinking
+- encouraging quick execution
+- building momentum through small actions
+
+---
+
+## Tech Stack
+
+- Flutter
+- Dart
+
+---
+
+## Core Idea
+
+Most productivity tools add layers—lists, priorities, systems.
+
+**the-5-minute-rule** does the opposite:
+- no task management
+- no planning overhead
+- just a trigger to act now
+
+---
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+git clone https://github.com/tezogogaladze/the-5-minute-rule.git
+cd the-5-minute-rule
+flutter pub get
+flutter run
